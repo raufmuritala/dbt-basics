@@ -1,42 +1,67 @@
-DBT Basics — End-to-End dbt + BigQuery Project
+# DBT Basics — End-to-End dbt + BigQuery Project
 
-This repository contains my first complete analytics engineering workflow using dbt (Data Build Tool) connected to Google Cloud Platform (GCP).
-The project includes ingestion of raw data, modeling, transformation, testing, documentation, and materialization of final tables into a dedicated BigQuery dataset: dbt_rmuritala.
+This project showcases an end-to-end analytics engineering workflow using dbt connected to Google BigQuery.  
+It includes data modeling, transformation, testing, documentation, and deployment of analytics-ready tables into the dataset `dbt_rmuritala`.
 
-Project Overview
+---
 
-Objective:
+# Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Architecture](#architecture)
+3. [Project Structure](#project-structure)
+4. [Key Components](#key-components)
+5. [What Was Implemented](#what-was-implemented)
+6. [How to Run This Project](#how-to-run-this-project)
+7. [Lightweight Case Study](#lightweight-case-study)
+8. [Resources](#resources)
+
+---
+
+# Project Overview
+
+## Objective
 
 To build a structured, production-ready dbt project demonstrating:
 
-Data transformation using SQL
+- Data transformation using SQL  
+- Model organization (staging, intermediate, final)  
+- Automated testing  
+- Use of macros and snapshots  
+- Deployment of transformed data into BigQuery  
 
-Model organization (staging, intermediate, final)
+## Tools Used
 
-Automated testing
+- dbt Cloud  
+- Google BigQuery  
+- GCP Service Account  
+- GitHub for version control  
 
-Use of macros and snapshots
+## Target Dataset
 
-Deployment of transformed data into BigQuery
-
-Environment Setup
-Tools Used:
-
-dbt Cloud
-
-Google BigQuery
-
-GCP Service Account for authentication
-
-GitHub for version control
-
-
-
-The project is configured to write all transformed tables into:
-
+```
 lofty-defender-389421.dbt_rmuritala
+```
 
-Project Structure
+---
+
+# Architecture
+
+## Mermaid Diagram
+
+```mermaid
+flowchart TD
+    A[Raw Data in BigQuery] --> B[dbt Staging Models]
+    B --> C[Intermediate Models]
+    C --> D[Final Models]
+    D --> E[Materialized Tables in dbt_rmuritala]
+```
+
+---
+
+# Project Structure
+
+```
 dbt-basics/
 │
 ├── analyses/
@@ -47,72 +72,101 @@ dbt-basics/
 ├── tests/
 ├── dbt_project.yml
 └── README.md
+```
 
-Key Components
+---
 
-models/
-Contains staging, intermediate, and final models. These handle cleaning, transformation, and preparation of raw data.
+# Key Components
 
-tests/
-Includes schema tests for uniqueness, not-null, and accepted values.
+## models/
+Contains staging, intermediate, and final models used for cleaning, transforming, and preparing raw data.
 
-macros/
-Contains reusable SQL functions for cleaner and more maintainable logic.
+## tests/
+Schema tests such as:
+- unique  
+- not-null  
+- accepted values  
 
-snapshots/
-Tracks historical changes in selected tables.
+## macros/
+Reusable SQL and Jinja functions that reduce repetitive code.
 
-What Was Implemented
-1. BigQuery Connection
+## snapshots/
+Tracks slowly-changing historical data over time.
 
-Configured authentication using a GCP service account JSON key.
-dbt Cloud successfully connected to BigQuery and targeted the dataset dbt_rmuritala.
+---
 
-2. Data Modeling
+# What Was Implemented
 
-Built the following model layers:
+## 1. BigQuery Connection
+- Authentication via a GCP service account JSON key  
+- dbt Cloud connected successfully to BigQuery  
+- All outputs materialize into the dataset `dbt_rmuritala`
 
-Staging models:
-Cleaned raw tables, standardized naming conventions, casted data types, and applied initial transformations.
+## 2. Data Modeling
+- Staging models: clean and standardize raw fields  
+- Intermediate models: business logic and joins  
+- Final models: analytics-ready tables  
 
-Intermediate models:
-Applied business logic transformations, joins, and aggregations.
+## 3. Testing
+Implemented schema-level tests ensuring:
+- Data reliability  
+- Constraint validation  
+- Consistency across model outputs  
 
-Final models:
-Materialized analysis-ready tables back into BigQuery.
+## 4. Snapshots and Macros
+- Snapshots created to track historical changes  
+- Macros written for modular and maintainable SQL  
 
-3. Tests
+---
 
-Added tests to ensure data quality:
+# How to Run This Project
 
-Unique constraints
+## Run All Models
 
-Not-null constraints
-
-Accepted values
-
-4. Snapshots and Macros
-
-Created snapshots to capture slowly changing records.
-
-Wrote macros to eliminate repetitive SQL logic and enforce consistency.
-
-How to Run This Project
-
-To build the models:
-
+```bash
 dbt run
+```
 
+## Run All Tests
 
-To execute all tests:
-
+```bash
 dbt test
+```
 
+## Generate Documentation
 
+```bash
+dbt docs generate
+dbt docs serve
+```
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [dbt community](https://getdbt.com/community) to learn from other analytics engineers
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+---
+
+# Lightweight Case Study
+
+## Business Problem
+Raw datasets contained inconsistent naming, mixed data types, missing values, and unclear structure.  
+There was no standardized pipeline for cleaning or preparing them for downstream analytics.
+
+## Solution
+This project created an end-to-end transformation workflow using dbt:
+
+1. Staging models to clean and standardize source data  
+2. Intermediate models applying business rules and joins  
+3. Final models structured for analytics and reporting  
+4. Tests ensuring ongoing data quality  
+5. Snapshots preserving historical record changes  
+
+## Outcome
+A modular, testable, reliable dbt pipeline producing analytics-ready tables in BigQuery.  
+This demonstrates core analytics engineering skills including modeling, testing, documentation, and cloud warehouse integration.
+
+---
+
+# Resources
+
+- dbt Documentation: https://docs.getdbt.com/docs/introduction  
+- dbt Discourse: https://discourse.getdbt.com  
+- dbt Community: https://getdbt.com/community  
+- BigQuery Docs: https://cloud.google.com/bigquery/docs  
+
